@@ -1,87 +1,176 @@
-# Scrapy settings for job_spider project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://docs.scrapy.org/en/latest/topics/settings.html
-#     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+# ============================================================================
+# 【合规提示】本代码仅供Python爬虫技术学习交流使用，请勿用于大规模爬取或商业目的。
+# 使用本代码前请阅读并遵守BOSS直聘网站的服务协议(https://www.zhipin.com/terms)。
+# ============================================================================
 
+"""
+JobSpider 全局配置文件
+
+本文件配置了爬虫项目的全局行为，包括：
+    - 爬取礼貌性（延迟、并发数）
+    - 反爬策略（robots协议、请求头伪装）
+    - 数据处理（管道激活）
+    - 日志输出（方便运行时查看状态）
+
+新手提示：
+    每个配置项都附有中文说明，可直接按注释修改。
+    修改后无需重启IDE，重新运行 scrapy crawl boss_zhipin 即可生效。
+"""
+
+# ============================================================================
+#  一、基础标识
+# ============================================================================
+# 爬虫项目名称（scrapy genspider 时自动生成，无需修改）
 BOT_NAME = "job_spider"
 
+# 爬虫模块搜索路径
 SPIDER_MODULES = ["job_spider.spiders"]
 NEWSPIDER_MODULE = "job_spider.spiders"
 
-ADDONS = {}
 
+# ============================================================================
+#  二、爬取策略与礼貌性配置
+# ============================================================================
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "job_spider (+http://www.yourdomain.com)"
+# 是否遵守 robots.txt 协议
+# 【修改】设为 False，因为BOSS直聘的 robots.txt 通常会禁止所有爬虫
+# 注意：学习用途下关闭是常见做法，但请控制爬取频率以示尊重
+ROBOTSTXT_OBEY = False
 
-# Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+# 每次请求之间的下载延迟（单位：秒）
+# 【修改】设为2秒，降低请求频率，减小对目标服务器的压力，也降低封IP风险
+# 新手注意：不要贪快，延迟过短极易触发反爬机制导致IP被封
+DOWNLOAD_DELAY = 2
 
-# Concurrency and throttling settings
-#CONCURRENT_REQUESTS = 16
+# 单个域名的最大并发请求数
+# 【修改】设为1，即同一时间只发1个请求给 zhipin.com，最温和的爬取策略
+# 等上一个请求的响应回来后，才会发下一个请求
 CONCURRENT_REQUESTS_PER_DOMAIN = 1
-DOWNLOAD_DELAY = 1
 
-# Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+# 全局最大并发请求数（所有域名加起来）
+# 保持默认8即可；由于我们只爬一个域名且已限制为1，此值实际不起作用
+# CONCURRENT_REQUESTS = 8
 
-# Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
 
-# Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#    "Accept-Language": "en",
-#}
+# ============================================================================
+#  三、请求头伪装（模拟浏览器）
+# ============================================================================
 
-# Enable or disable spider middlewares
-# See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    "job_spider.middlewares.JobSpiderSpiderMiddleware": 543,
-#}
+# 默认请求头
+# 【修改】伪装成 Chrome 浏览器的 User-Agent，避免被识别为爬虫直接拒绝
+# 这是最基础的反反爬手段，绝大多数网站至少会检查 User-Agent
+DEFAULT_REQUEST_HEADERS = {
+    # 标准的 Chrome 浏览器标识（Windows 平台）
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/125.0.0.0 Safari/537.36"
+    ),
+    # 接受的内容类型
+    "Accept": (
+        "text/html,application/xhtml+xml,"
+        "application/xml;q=0.9,image/webp,*/*;q=0.8"
+    ),
+    # 接受的语言（中文优先）
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+    # 接受的内容编码
+    "Accept-Encoding": "gzip, deflate, br",
+    # 缓存控制
+    "Cache-Control": "max-age=0",
+    # 连接类型
+    "Connection": "keep-alive",
+}
 
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "job_spider.middlewares.JobSpiderDownloaderMiddleware": 543,
-#}
 
-# Enable or disable extensions
-# See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
+# ============================================================================
+#  四、Cookie 与重定向
+# ============================================================================
 
-# Configure item pipelines
-# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "job_spider.pipelines.JobSpiderPipeline": 300,
-#}
+# 是否禁用 Cookies
+# 保持默认（启用），部分网站需要Cookie维持会话状态
+# COOKIES_ENABLED = True
 
-# Enable and configure the AutoThrottle extension (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
-# The initial download delay
-#AUTOTHROTTLE_START_DELAY = 5
-# The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
-# The average number of requests Scrapy should be sending in parallel to
-# each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
-# Enable showing throttling stats for every response received:
-#AUTOTHROTTLE_DEBUG = False
+# 是否禁用 Telnet 控制台
+# 学习阶段建议保持默认开启（启用），方便调试时查看爬虫内部状态
+# TELNETCONSOLE_ENABLED = True
 
-# Enable and configure HTTP caching (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
-#HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = "httpcache"
-#HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
-# Set settings whose default value is deprecated to a future-proof value
+# ============================================================================
+#  五、中间件配置
+# ============================================================================
+
+# 本项目不引入自定义中间件，保持默认（注释状态）即可
+# 如需使用代理、自定义请求头等进阶功能，可取消下方注释
+# DOWNLOADER_MIDDLEWARES = {
+#     "job_spider.middlewares.JobSpiderDownloaderMiddleware": 543,
+# }
+
+
+# ============================================================================
+#  六、管道配置（数据处理流水线）
+# ============================================================================
+
+# 【修改】启用自定义CSV导出管道
+# 数字 300 代表优先级（0-1000，数字越小越先执行），使用默认值300即可
+ITEM_PIPELINES = {
+    "job_spider.pipelines.CsvExportPipeline": 300,
+}
+
+
+# ============================================================================
+#  七、自动限速扩展（AutoThrottle）
+# ============================================================================
+
+# 自动限速：根据服务器响应时间自动调整下载延迟
+# 【建议】学习阶段关闭，避免行为不可预测；生产环境可开启
+AUTOTHROTTLE_ENABLED = False
+
+# 如果开启自动限速，以下参数生效（当前不启用，仅供参考）：
+# AUTOTHROTTLE_START_DELAY = 5        # 初始延迟（秒）
+# AUTOTHROTTLE_MAX_DELAY = 60         # 最大延迟（秒）
+# AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0  # 目标并发数
+
+
+# ============================================================================
+#  八、HTTP缓存配置
+# ============================================================================
+
+# 【建议】开发调试阶段可开启缓存，避免重复请求浪费时间
+# 正式爬取时建议关闭，否则可能爬到旧数据
+# HTTPCACHE_ENABLED = True
+# HTTPCACHE_EXPIRATION_SECS = 0           # 缓存过期时间（0=永不过期）
+# HTTPCACHE_DIR = "httpcache"             # 缓存存储目录
+# HTTPCACHE_IGNORE_HTTP_CODES = []        # 不缓存的HTTP状态码
+
+
+# ============================================================================
+#  九、日志配置
+# ============================================================================
+
+# 日志级别
+# 【修改】设为 INFO，运行时显示关键信息（每页请求、翻页、写入等）
+# 可选级别（从详细到简洁）：DEBUG > INFO > WARNING > ERROR > CRITICAL
+#   - DEBUG:   最详细，适合开发调试
+#   - INFO:    适中，适合正式运行观察进度
+#   - WARNING: 仅警告和错误
+LOG_LEVEL = "INFO"
+
+# 日志输出文件（可选）
+# 为空表示输出到控制台，填入路径则将日志写入文件
+# LOG_FILE = "scrapy.log"
+
+
+# ============================================================================
+#  十、其他配置
+# ============================================================================
+
+# 文件导出编码统一使用 UTF-8
 FEED_EXPORT_ENCODING = "utf-8"
+
+# 重试次数（请求失败时自动重试）
+# 保持默认2次即可，网络波动时增加容错
+# RETRY_TIMES = 2
+
+# 下载超时时间（秒）
+# 保持默认180秒，页面较大或网络较慢时需要足够时间
+# DOWNLOAD_TIMEOUT = 180

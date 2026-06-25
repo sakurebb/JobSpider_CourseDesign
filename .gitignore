@@ -1,0 +1,14 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Scrapy output
+output/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
