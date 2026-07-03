@@ -1,0 +1,245 @@
+/* ============================================================================
+   招聘数据采集与可视化系统 · 暗色 Dashboard 主题样式
+   ============================================================================ */
+
+/* ---- Reset & Base ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #0f1923;
+  --bg-secondary: #1a2736;
+  --bg-card: #1e3043;
+  --bg-input: #15212e;
+  --border: #2a3f55;
+  --text-primary: #e8edf2;
+  --text-secondary: #8fa3b8;
+  --text-dim: #5a7088;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --chart-colors: #3b82f6 #10b981 #f59e0b #ef4444 #8b5cf6 #ec4899 #06b6d4 #f97316 #84cc16 #64748b;
+  --radius: 8px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+               "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ---- Header ---- */
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 28px; background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+.header-left h1 { font-size: 22px; font-weight: 700; }
+.header-left .subtitle { font-size: 13px; color: var(--text-secondary); margin-left: 12px; }
+.header-right { display: flex; gap: 10px; }
+
+/* ---- Buttons ---- */
+.btn {
+  padding: 8px 18px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-card); color: var(--text-primary); cursor: pointer;
+  font-size: 14px; transition: all 0.2s; white-space: nowrap;
+}
+.btn:hover { background: var(--bg-input); border-color: var(--accent); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+.btn-danger:hover { background: #dc2626; }
+.btn-danger:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-outline { background: transparent; }
+.btn-sm { padding: 4px 12px; font-size: 12px; }
+
+/* ---- Control Bar ---- */
+.control-bar {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 14px 28px; background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+.control-group { display: flex; align-items: center; gap: 6px; }
+.control-group label { font-size: 13px; color: var(--text-secondary); }
+.control-group input, .control-group select {
+  padding: 7px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-input); color: var(--text-primary); font-size: 14px;
+  outline: none;
+}
+.control-group input:focus, .control-group select:focus { border-color: var(--accent); }
+.spider-status { font-size: 13px; margin-left: 8px; }
+.spider-status.idle { color: var(--text-dim); }
+.spider-status.running { color: var(--success); animation: pulse 1.5s infinite; }
+.spider-status.error { color: var(--danger); }
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* ---- KPI Cards ---- */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+  padding: 20px 28px;
+}
+.kpi-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+  text-align: center; transition: transform 0.2s;
+}
+.kpi-card:hover { transform: translateY(-2px); }
+.kpi-icon { font-size: 28px; margin-bottom: 6px; }
+.kpi-value { font-size: 28px; font-weight: 700; color: var(--text-primary); }
+.kpi-label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+/* ---- Charts Grid ---- */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 0 28px 20px;
+}
+.chart-panel {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.chart-panel-sm { /* 3-column for row 2 */ }
+.chart-panel-full { grid-column: 1 / -1; }
+.chart-title {
+  font-size: 14px; font-weight: 600; padding: 12px 18px 0;
+  color: var(--text-secondary);
+}
+.chart-container { width: 100%; height: 320px; }
+.chart-panel-full .chart-container { height: 280px; }
+
+/* ---- Table Section ---- */
+.table-section {
+  margin: 0 28px 20px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden;
+}
+.table-header {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px; padding: 16px 18px 12px;
+}
+.table-header h2 { font-size: 16px; }
+.table-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.table-controls input, .table-controls select {
+  padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-input); color: var(--text-primary); font-size: 13px;
+  outline: none;
+}
+.table-controls input:focus, .table-controls select:focus { border-color: var(--accent); }
+.table-controls input { width: 180px; }
+.table-count { font-size: 13px; color: var(--text-dim); margin-left: 8px; }
+
+.table-wrapper { overflow-x: auto; }
+#jobs-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+#jobs-table thead { background: var(--bg-input); position: sticky; top: 0; z-index: 1; }
+#jobs-table th {
+  padding: 10px 12px; text-align: left; color: var(--text-secondary);
+  font-weight: 600; cursor: pointer; user-select: none;
+  white-space: nowrap; border-bottom: 2px solid var(--border);
+}
+#jobs-table th:hover { color: var(--accent); }
+#jobs-table th.sorted { color: var(--accent); }
+#jobs-table td {
+  padding: 9px 12px; border-bottom: 1px solid rgba(42,63,85,0.5);
+  max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#jobs-table tbody tr:hover { background: rgba(59,130,246,0.06); }
+#jobs-table .salary-col { color: var(--warning); font-weight: 600; }
+#jobs-table .link-btn { color: var(--accent); cursor: pointer; text-decoration: underline; font-size: 12px; }
+#jobs-table .loading-row { text-align: center; color: var(--text-dim); padding: 40px; }
+
+/* ---- Pagination ---- */
+.pagination {
+  display: flex; justify-content: center; align-items: center;
+  gap: 14px; padding: 14px; border-top: 1px solid var(--border);
+}
+.pagination button {
+  padding: 6px 16px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-input); color: var(--text-primary); cursor: pointer; font-size: 13px;
+}
+.pagination button:hover:not(:disabled) { border-color: var(--accent); }
+.pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
+#page-info { font-size: 13px; color: var(--text-secondary); }
+
+/* ---- Log Section ---- */
+.log-section {
+  margin: 0 28px 24px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden;
+}
+.log-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 18px; cursor: pointer; user-select: none;
+}
+.log-header h2 { font-size: 16px; }
+.log-content {
+  border-top: 1px solid var(--border);
+  max-height: 260px; overflow-y: auto;
+  background: #0b1620; font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+  font-size: 12px;
+}
+.log-lines { padding: 10px 14px; }
+.log-line { padding: 2px 0; color: var(--text-secondary); word-break: break-all; }
+.log-line.dim { color: var(--text-dim); }
+.log-line.error { color: var(--danger); }
+.log-line.success { color: var(--success); }
+.log-line.system { color: var(--accent); }
+
+.badge {
+  display: inline-block; font-size: 11px; padding: 2px 8px;
+  border-radius: 10px; background: var(--success); color: #fff; margin-left: 8px;
+}
+.badge.hidden { display: none; }
+
+/* ---- Modal ---- */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65); z-index: 1000;
+  align-items: center; justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: 12px; width: 90%; max-width: 620px; max-height: 80vh;
+  overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.modal-header h3 { font-size: 16px; }
+.btn-close {
+  width: 28px; height: 28px; border: none; border-radius: 50%;
+  background: transparent; color: var(--text-secondary); font-size: 16px;
+  cursor: pointer;
+}
+.btn-close:hover { background: var(--bg-input); color: var(--text-primary); }
+.modal-body { padding: 18px 20px; }
+.modal-body .detail-row {
+  display: flex; padding: 8px 0; border-bottom: 1px solid rgba(42,63,85,0.4);
+}
+.modal-body .detail-label {
+  width: 90px; flex-shrink: 0; color: var(--text-dim); font-size: 13px;
+}
+.modal-body .detail-value { color: var(--text-primary); font-size: 13px; word-break: break-all; }
+.modal-body .detail-link { color: var(--accent); }
+
+/* ---- Responsive ---- */
+@media (max-width: 1200px) {
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .charts-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .header { flex-direction: column; gap: 10px; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .control-bar { flex-direction: column; align-items: stretch; }
+  .table-controls { flex-direction: column; }
+}
